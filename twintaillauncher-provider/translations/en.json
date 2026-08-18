@@ -1,0 +1,12 @@
+{
+  "settings": {
+    "exec_command": {
+      "description": "TwintailLauncher executable path, default is 'twintaillauncher'",
+      "label": "TwintailLauncher Executable"
+    },
+    "flatpak": {
+      "label": "Flatpak version",
+      "description": "If you use the Flatpak version, turn this on"
+    }
+  }
+}
