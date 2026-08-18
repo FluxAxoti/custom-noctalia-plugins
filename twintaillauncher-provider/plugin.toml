@@ -1,0 +1,34 @@
+id = "fluxaxoti/twintaillauncher-provider"
+name = "TwintailLauncher Instances"
+version = "1.0.1"
+plugin_api = 3
+author = "fluxaxoti"
+license = "MIT"
+dependencies = ["twintaillauncher"]
+icon = "folder"
+deprecated = false
+description = "A way to launch gacha games from TwintailLauncher through Noctalia."
+tags = ["gaming", "launcher"]
+
+[[launcher_provider]]
+id = "twintaillauncher-provider"
+entry = "twintaillauncher-provider.luau"
+prefix = "ttl"
+glyph = "nut"
+include_in_global_search = false
+debounce_ms = 0
+
+[[setting]]
+key = "flatpak"
+type = "bool"
+label_key = "settings.flatpak.label"
+description_key = "settings.flatpak.description"
+default = true
+
+[[setting]]
+key = "exec_command"
+type = "string"
+label_key = "settings.exec_command.label"
+description_key = "settings.exec_command.description"
+visible_when = {key = "flatpak", values = ["false"]}
+default = "twintaillauncher"
