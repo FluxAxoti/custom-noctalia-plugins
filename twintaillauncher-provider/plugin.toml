@@ -5,7 +5,7 @@ plugin_api = 3
 author = "fluxaxoti"
 license = "MIT"
 dependencies = ["twintaillauncher"]
-icon = "folder"
+glyph = "folder"
 deprecated = false
 description = "A way to launch gacha games from TwintailLauncher through Noctalia."
 tags = ["gaming", "launcher"]
@@ -14,7 +14,7 @@ tags = ["gaming", "launcher"]
 id = "twintaillauncher-provider"
 entry = "twintaillauncher-provider.luau"
 prefix = "ttl"
-glyph = "nut"
+glyph = "folder"
 include_in_global_search = false
 debounce_ms = 0
 

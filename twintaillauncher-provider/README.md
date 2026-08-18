@@ -1,8 +1,4 @@
 # TwintailLauncher Provider
-<p align="center">
-  <img src="./twintaillauncher-provider-thumbnail.webp" alt="Noctalia Logo" />
-</p>
-
 ---
 A way to launch gacha games from TwintailLauncher through Noctalia.
 
