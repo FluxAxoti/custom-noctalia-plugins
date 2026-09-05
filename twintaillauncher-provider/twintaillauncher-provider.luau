@@ -1,15 +1,17 @@
 --!nonstrict
 
 local games = {
-    {id = "aethergazer_global", title = "Aether Gazer Global", subtitle = "", icon = noctalia.pluginDir().."/icons/aethergazer_global.ico", score = 0},
-    {id = "hkrpg_global", title = "Honkai: StarRail Global", subtitle = "", icon = noctalia.pluginDir().."/icons/hkrpg_global.ico", score = 0},
-    {id = "bh3_global", title = "Honkai Impact 3rd Global", subtitle = "", icon = noctalia.pluginDir().."/icons/bh3_global.ico", score = 0},
-    {id = "wuwa_global", title = "Wuthering Waves Global", subtitle = "", icon = noctalia.pluginDir().."/icons/wuwa_global.ico", score = 0},
-    {id = "nap_global", title = "Zenless Zone Zero Global", subtitle = "", icon = noctalia.pluginDir().."/icons/nap_global.ico", score = 0},
-    {id = "hk4e_global", title = "Genshin Impact Global", subtitle = "", icon = noctalia.pluginDir().."/icons/hk4e_global.ico", score = 0},
-    {id = "pgr_global", title = "Punishing: Gray Raven Global", subtitle = "", icon = noctalia.pluginDir().."/icons/pgr_global.ico", score = 0},
-    {id = "sdsgc_global", title = "SevenDeadlySins: Grand Cross Global", subtitle = "", icon = noctalia.pluginDir().."/icons/sdsgc_global.ico", score = 0},
-    {id = "endfield_global", title = "Arknights: Endfield", subtitle = "", icon = noctalia.pluginDir().."/icons/endfield_global.ico", score = 0}
+    {id = "aethergazer_global", title = "Aether Gazer (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/aethergazer_global.ico", score = 0},
+    {id = "hkrpg_global", title = "Honkai: StarRail (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/hkrpg_global.ico", score = 0},
+    {id = "bh3_global", title = "Honkai Impact 3rd (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/bh3_global.ico", score = 0},
+    {id = "wuwa_global", title = "Wuthering Waves (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/wuwa_global.ico", score = 0},
+    {id = "nap_global", title = "Zenless Zone Zero (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/nap_global.ico", score = 0},
+    {id = "hk4e_global", title = "Genshin Impact (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/hk4e_global.ico", score = 0},
+    {id = "pgr_global", title = "Punishing: Gray Raven (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/pgr_global.ico", score = 0},
+    {id = "sdsgc_global", title = "SevenDeadlySins: Grand Cross (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/sdsgc_global.ico", score = 0},
+    {id = "endfield_global", title = "Arknights: Endfield (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/endfield_global.ico", score = 0},
+    {id = "stellasora_global", title = "Stella Sora (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/stellasora_global.ico", score = 0},
+    {id = "arknights_global", title = "Arknights (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/arknights_global.ico", score = 0}
 }
 local executable: string
 
