@@ -1,60 +1,70 @@
 --!nonstrict
+local pluginData = noctalia.pluginDataDir()
+local iconPath = pluginData.."/icons"
+local manifestPath
+local manifestFiles = {}
+local game_path
+local local_games: {string}
 
-local games = {
-    {id = "aethergazer_global", title = "Aether Gazer (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/aethergazer_global.ico", score = 0},
-    {id = "hkrpg_global", title = "Honkai: StarRail (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/hkrpg_global.ico", score = 0},
-    {id = "bh3_global", title = "Honkai Impact 3rd (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/bh3_global.ico", score = 0},
-    {id = "wuwa_global", title = "Wuthering Waves (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/wuwa_global.ico", score = 0},
-    {id = "nap_global", title = "Zenless Zone Zero (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/nap_global.ico", score = 0},
-    {id = "hk4e_global", title = "Genshin Impact (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/hk4e_global.ico", score = 0},
-    {id = "pgr_global", title = "Punishing: Gray Raven (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/pgr_global.ico", score = 0},
-    {id = "sdsgc_global", title = "SevenDeadlySins: Grand Cross (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/sdsgc_global.ico", score = 0},
-    {id = "endfield_global", title = "Arknights: Endfield (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/endfield_global.ico", score = 0},
-    {id = "stellasora_global", title = "Stella Sora (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/stellasora_global.ico", score = 0},
-    {id = "arknights_global", title = "Arknights (Global)", subtitle = "", icon = noctalia.pluginDir().."/icons/arknights_global.ico", score = 0}
-}
-local executable: string
+if noctalia.getConfig("flatpak") ~= false then
+    executable = "flatpak run app.twintaillauncher.ttl"
+    game_path = noctalia.expandPath("~/.var/app/app.twintaillauncher.ttl/data/twintaillauncher/games")
+    manifestPath = noctalia.expandPath("~/.var/app/app.twintaillauncher.ttl/data/twintaillauncher/manifests/TwintailTeam/game-manifests")
+else
+    executable = noctalia.getConfig("exec_command")
+    game_path = noctalia.expandPath("~/.local/share/twintaillauncher/games")
+    manifestPath = noctalia.expandPath("~/.local/share/twintaillauncher/manifests/TwintailTeam/game-manifests")
+end
+
+local success, err = pcall(function()
+    local_games = noctalia.listDir(game_path)
+end)
+
+for _, game in local_games do
+    for id, manifest in noctalia.listDir(manifestPath) do
+        if string.find(manifest, game, 1, true) then
+            table.insert(manifestFiles, noctalia.json.decode(noctalia.readFile(manifestPath.."/"..manifest)))
+        end
+    end
+end
 
 function onQuery(query)
     local game_results = {}
     local results = {}
-    local game_path: string
-    local local_games: {string}
-    if noctalia.getConfig("flatpak") ~= false then
-        executable = "flatpak run app.twintaillauncher.ttl"
-        game_path = noctalia.expandPath("~/.var/app/app.twintaillauncher.ttl/data/twintaillauncher/games")
+    if not success then
+        launcher.setResults(query, {{id = "failed", title = "No games found", subtitle = "No installed games were found", glyph = "x", score = 0}})
     else
-        executable = noctalia.getConfig("exec_command")
-        game_path = noctalia.expandPath("~/.local/share/twintaillauncher/games")
-    end
-    local_games = noctalia.listDir(game_path)
-    for id, game in games do
-        for local_id, local_game in local_games do
-            for _, hash in noctalia.listDir(game_path.."/"..local_game) do
-                if game.id == local_game then
-                    game["subtitle"] = hash
-                    table.insert(game_results, game)
-                end
+        for _, manifest in manifestFiles do
+            if not noctalia.fileExists(iconPath.."/"..manifest["biz"]..".ico") then
+                noctalia.notify("Downloading icons..")
+                noctalia.download(manifest["assets"]["game_icon"], iconPath.."/"..manifest["biz"]..".ico", function(resp)
+                    table.insert(game_results, {id = manifest["biz"], title = manifest["display_name"], subtitle = noctalia.listDir(game_path.."/"..manifest["biz"])[1], icon = iconPath.."/"..manifest["biz"]..".ico", score = 0})
+                    launcher.setResults(query, game_results)
+                end)
+            else
+                table.insert(game_results, {id = manifest["biz"], title = manifest["display_name"], subtitle = noctalia.listDir(game_path.."/"..manifest["biz"])[1], icon = iconPath.."/"..manifest["biz"]..".ico", score = 0})
             end
         end
-    end
 
-    launcher.setResults(query, game_results)
-
-    for _, game in game_results do
-        local formatted_game = string.gsub(string.gsub(string.lower(game["title"]), " ", ""), ":", "")
-        local formatted_query = string.gsub(string.gsub(string.lower(query), " ", ""), ":", "")
-        if formatted_game:find(formatted_query, 1, true) then
-          table.insert(results, game)
+        if #noctalia.listDir(iconPath.."/") == #local_games then
+            for _, game in game_results do
+                local formatted_game = string.gsub(string.gsub(string.lower(game["title"]), " ", ""), ":", "")
+                local formatted_query = string.gsub(string.gsub(string.lower(query), " ", ""), ":", "")
+                if formatted_game:find(formatted_query, 1, true) then
+                table.insert(results, game)
+                end
+            end
+            launcher.setResults(query, results)
         end
     end
-    launcher.setResults(query, results)
 end
 
 function onActivate(id)
-    for _, game in games do
-        if game["id"] == id then
-            noctalia.runAsync(executable.." --install "..game["subtitle"])
+    if not (id == "failed") then
+        for _, game in local_games do
+            if game == id then
+                noctalia.runAsync(executable.." --install "..noctalia.listDir(game_path.."/"..game)[1])
+            end
         end
     end
 end
